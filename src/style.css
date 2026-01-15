@@ -263,8 +263,18 @@ img {
 .hero__description {
     font-size: 1.125rem;
     color: var(--text-light);
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
     max-width: 540px;
+}
+
+.hero__metrics {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    font-weight: 500;
+    opacity: 0.9;
 }
 
 .hero__buttons {
@@ -868,6 +878,13 @@ img {
 
     .button--full {
         width: 100%;
+        min-height: 48px;
+        /* Better touch target */
+    }
+
+    .button {
+        padding: 1rem 1.5rem;
+        /* Larger touch area */
     }
 
     .step {
