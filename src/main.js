@@ -104,7 +104,12 @@ if (contactForm) {
                 alert('¡Gracias! Tu mensaje ha sido enviado correctamente.');
                 contactForm.reset();
             } else {
-                alert('Oops! Hubo un problema enviando tu formulario. Por favor intenta de nuevo.');
+                const data = await response.json().catch(() => ({}));
+                if (data.errors) {
+                    alert('Error: ' + data.errors.map(err => err.message).join(', '));
+                } else {
+                    alert('Oops! Hubo un problema enviando tu formulario. Por favor verifica el ID de Formspree o intenta de nuevo.');
+                }
             }
         } catch (error) {
             alert('Oops! Hubo un problema conectando al servidor. Revisa tu conexión.');
