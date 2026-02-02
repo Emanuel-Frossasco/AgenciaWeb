@@ -108,7 +108,7 @@ if (contactForm) {
                 if (data.errors) {
                     alert('Error: ' + data.errors.map(err => err.message).join(', '));
                 } else {
-                    alert('Oops! Hubo un problema enviando tu formulario. Por favor verifica el ID de Formspree o intenta de nuevo.');
+                    alert('Oops! Hubo un problema enviando tu formulario. Por favor intentelo de nuevo mas tarde.');
                 }
             }
         } catch (error) {
