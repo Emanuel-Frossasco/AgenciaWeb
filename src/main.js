@@ -78,44 +78,59 @@ function scrollHeader() {
 window.addEventListener('scroll', scrollHeader);
 
 /* =========================================
-   Contact Form Simulate
+   Contact Form → WhatsApp
    ========================================= */
 const contactForm = document.getElementById('contact-form');
 if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
+    contactForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        const button = contactForm.querySelector('button');
-        const originalText = button.textContent;
-        const formData = new FormData(contactForm);
 
-        button.textContent = 'Enviando...';
-        button.disabled = true;
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const service = document.getElementById('service').value;
+        const message = document.getElementById('message').value.trim();
 
-        try {
-            const response = await fetch(contactForm.getAttribute('action'), {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-
-            if (response.ok) {
-                alert('¡Gracias! Tu mensaje ha sido enviado correctamente.');
-                contactForm.reset();
-            } else {
-                const data = await response.json().catch(() => ({}));
-                if (data.errors) {
-                    alert('Error: ' + data.errors.map(err => err.message).join(', '));
-                } else {
-                    alert('Oops! Hubo un problema enviando tu formulario. Por favor intentelo de nuevo mas tarde.');
-                }
-            }
-        } catch (error) {
-            alert('Oops! Hubo un problema conectando al servidor. Revisa tu conexión.');
-        } finally {
-            button.textContent = originalText;
-            button.disabled = false;
+        // Validación básica
+        if (!name || !email || !message) {
+            showFormFeedback('Por favor completá todos los campos requeridos.', 'error');
+            return;
         }
+
+        // Armar el mensaje de WhatsApp
+        const waNumber = '5493541614667';
+        let text = `Hola Emanuel! Me contacto desde tu sitio web.\n\n`;
+        text += `*Nombre:* ${name}\n`;
+        text += `*Email:* ${email}\n`;
+        if (service) text += `*Servicio:* ${service}\n`;
+        text += `\n*Mensaje:*\n${message}`;
+
+        const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`;
+        window.open(waUrl, '_blank');
+
+        showFormFeedback('¡Genial! Te dirigimos a WhatsApp para completar el envío.', 'success');
+        contactForm.reset();
     });
+}
+
+function showFormFeedback(msg, type) {
+    // Remover feedback anterior si existe
+    const old = document.getElementById('form-feedback');
+    if (old) old.remove();
+
+    const el = document.createElement('p');
+    el.id = 'form-feedback';
+    el.textContent = msg;
+    el.style.cssText = `
+        margin-top: 12px;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        text-align: center;
+        background: ${type === 'success' ? 'rgba(34,197,94,0.15)' : 'rgba(239,68,68,0.15)'};
+        color: ${type === 'success' ? '#16a34a' : '#dc2626'};
+        border: 1px solid ${type === 'success' ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.3)'};
+    `;
+    contactForm.appendChild(el);
+    setTimeout(() => el.remove(), 5000);
 }
